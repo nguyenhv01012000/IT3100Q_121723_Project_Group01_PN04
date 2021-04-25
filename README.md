@@ -22,3 +22,4 @@ App will run
 ---
 ### Note
 - You can see my project, it's [here](https://github.com/nguyenhv01012000/IT3100Q_121723_Project_Group01_PN04)
+<img src="project.png" width=1000>
