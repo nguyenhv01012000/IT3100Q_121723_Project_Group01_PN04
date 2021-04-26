@@ -24,7 +24,7 @@ public class Doctor extends Student{
         super(fullname, gender, position, birthday, hospital, phoneNumber, working, surgery, night, salary);
     }
     
-    public void setSalary(String salary) {
-		this.salary = salary;
+    public void setSalary(int working, int surgery) {
+		this.salary = working*500000 + surgery*2000000;
 	}
 }

@@ -23,7 +23,7 @@ public class Nurse extends Student{
         super(fullname, gender, position, birthday, hospital, phoneNumber, working, surgery, night, salary);
     }
     
-    public void setSalary(String salary) {
-		this.salary = salary;
+    public void setSalary(int working, int night) {
+		this.salary = working*200000 + night*500000;
 	}
 }
