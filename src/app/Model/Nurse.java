@@ -12,6 +12,8 @@ import app.Model.Abstract.Student;
  */
 public class Nurse extends Student{
 
+    int salary;
+
     public Nurse() {
     }
 

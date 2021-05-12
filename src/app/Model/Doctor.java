@@ -12,6 +12,8 @@ import app.Model.Abstract.Student;
  * @author Admin
  */
 public class Doctor extends Student{
+    
+    int salary;
 
     public Doctor() {
     }
