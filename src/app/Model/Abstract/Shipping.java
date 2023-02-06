@@ -8,10 +8,23 @@ package app.Model.Abstract;
 public class Shipping {
     int id;
     String senderName, senderAddress, sendingTime, receiverName, receiverAddress, receivingTime, category;
-	int km, kg, cost;
+    String km, kg, cost;
 
-    public Shipping(int id, String senderName, String senderAddress, String sendingTime, String receiverName, String receiverAddress, String receivingTime, String category, int km, int kg, int cost) {
+    public Shipping(int id, String senderName, String senderAddress, String sendingTime, String receiverName, String receiverAddress, String receivingTime, String category, String km, String kg, String cost) {
         this.id = id;
+        this.km = km;
+        this.kg = kg;
+        this.cost = cost;
+        this.senderName = senderName;
+        this.senderAddress = senderAddress;
+        this.sendingTime = sendingTime;
+        this.receiverName = receiverName;
+        this.receiverAddress = receiverAddress;
+        this.receivingTime = receivingTime;
+        this.category = category;
+    }
+    
+    public Shipping(String senderName, String senderAddress, String sendingTime, String receiverName, String receiverAddress, String receivingTime, String category, String km, String kg, String cost) {
         this.km = km;
         this.kg = kg;
         this.cost = cost;
@@ -28,15 +41,15 @@ public class Shipping {
         return id;
     }
 
-    public int getKm() {
+    public String getKm() {
         return km;
     }
 
-    public int getKg() {
+    public String getKg() {
         return kg;
     }
 
-    public int getCost() {
+    public String getCost() {
         return cost;
     }
 
@@ -72,15 +85,15 @@ public class Shipping {
         this.id = id;
     }
 
-    public void setKm(int km) {
+    public void setKm(String km) {
         this.km = km;
     }
 
-    public void setKg(int kg) {
+    public void setKg(String kg) {
         this.kg = kg;
     }
 
-    public void setCost(int cost) {
+    public void setCost(String cost) {
         this.cost = cost;
     }
 
