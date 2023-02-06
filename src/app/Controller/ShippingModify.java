@@ -1,5 +1,5 @@
 package app.Controller;
-import app.Model.Abstract.Student;
+import app.Model.Abstract.Shipping;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,19 +22,21 @@ import java.util.logging.Logger;
  * 
  * @author Diep.Tran
  */
-public class StudentModify {
-    public static List<Student> findAll() {
-        List<Student> studentList = new ArrayList<>();
+public class ShippingModify {
+    public static List<Shipping> findAll() {
+        List<Shipping> studentList = new ArrayList<>();
 
         Connection connection = null;
         Statement statement = null;
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
-            String sqlsql = "CREATE TABLE IF NOT EXISTS student ( id int primary key auto_increment,fullname varchar(50) not null, gender varchar(15), position varchar(15),birthday varchar(150), hospital varchar(150),phone_number varchar(150),working varchar(150),surgery varchar(150),night varchar(150),salary varchar(150))";
+            String sqlsql = "CREATE TABLE IF NOT EXISTS shipping ( id int primary key auto_increment,senderName varchar(50) not null, senderAddress varchar(50) not null, sendingTime varchar(50) not null"
+                    + ",receiverName varchar(50) not null, receiverAddress varchar(50) not null, receivingTime varchar(50) not null"
+                    + ",category varchar(50), km varchar(15),kg varchar(15), cost varchar(15))";
             String sql = "select * from student";
             statement = connection.createStatement();
 
@@ -42,21 +44,21 @@ public class StudentModify {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Student std = new Student(resultSet.getInt("id"), resultSet.getString("fullname"),
-                        resultSet.getString("gender"), resultSet.getString("position"), resultSet.getString("birthday"),
-                        resultSet.getString("hospital"), resultSet.getString("phone_number"),
-                        resultSet.getString("working"), resultSet.getString("surgery"), resultSet.getString("night"),
-                        resultSet.getString("salary"));
+                Shipping std = new Shipping(resultSet.getInt("id"), 
+                        resultSet.getString("senderName"), resultSet.getString("senderAddress"), resultSet.getString("sendingTime"),
+                        resultSet.getString("receiverName"), resultSet.getString("receiverAddress"), resultSet.getString("receivingTime"),
+                        resultSet.getString("category"), resultSet.getInt("km"), resultSet.getInt("kg"),
+                        resultSet.getInt("cost"));
                 studentList.add(std);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -64,7 +66,7 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -73,38 +75,38 @@ public class StudentModify {
         return studentList;
     }
 
-    public static void insert(Student std) {
+    public static void insert(Shipping std) {
         Connection connection = null;
         PreparedStatement statement = null;
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
-            String sql = "insert into student(fullname, gender, position, birthday, hospital, phone_number, working, surgery, night, salary) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "insert into shipping(senderName, senderAddress, sendingTime, receiverName, receiverAddress, receivingTime, category, km, kg, cost) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareCall(sql);
 
-            statement.setString(1, std.getFullname());
-            statement.setString(2, std.getGender());
-            statement.setString(3, std.getPosition());
-            statement.setString(4, std.getBirthday());
-            statement.setString(5, std.getHospital());
-            statement.setString(6, std.getPhoneNumber());
-            statement.setString(7, std.getWorking());
-            statement.setString(8, std.getSurgery());
-            statement.setString(9, std.getNight());
-            statement.setString(10, std.getSalary());
+            statement.setString(1, std.getSenderAddress());
+            statement.setString(2, std.getSenderAddress());
+            statement.setString(3, std.getSendingTime());
+            statement.setString(4, std.getReceiverName());
+            statement.setString(5, std.getReceiverAddress());
+            statement.setString(6, std.getReceivingTime());
+            statement.setString(7, std.getCategory());
+            statement.setString(8, String.valueOf(std.getKm()));
+            statement.setString(9,  String.valueOf(std.getKg()));
+            statement.setString(10,  String.valueOf(std.getCost()));
 
             statement.execute();
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -112,46 +114,46 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
         // ket thuc.
     }
 
-    public static void update(Student std) {
+    public static void update(Shipping std) {
         Connection connection = null;
         PreparedStatement statement = null;
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
-            String sql = "update student set fullname=?,gender=?,position=?,birthday=?,hospital=?,phone_number=?,working=?,surgery=?,night=?,salary=? where id = ?";
+            String sql = "update student set senderName=?, senderAddress=?, sendingTime=?, receiverName=?, receiverAddress=?, receivingTime=?, category=?, km=?, kg=?, cost=? where id = ?";
             statement = connection.prepareCall(sql);
 
-            statement.setString(1, std.getFullname());
-            statement.setString(2, std.getGender());
-            statement.setString(3, std.getPosition());
-            statement.setString(4, std.getBirthday());
-            statement.setString(5, std.getHospital());
-            statement.setString(6, std.getPhoneNumber());
-            statement.setString(7, std.getWorking());
-            statement.setString(8, std.getSurgery());
-            statement.setString(9, std.getNight());
-            statement.setString(10, std.getSalary());
+            statement.setString(1, std.getSenderAddress());
+            statement.setString(2, std.getSenderAddress());
+            statement.setString(3, std.getSendingTime());
+            statement.setString(4, std.getReceiverName());
+            statement.setString(5, std.getReceiverAddress());
+            statement.setString(6, std.getReceivingTime());
+            statement.setString(7, std.getCategory());
+            statement.setString(8, String.valueOf(std.getKm()));
+            statement.setString(9,  String.valueOf(std.getKg()));
+            statement.setString(10,  String.valueOf(std.getCost()));
             statement.setInt(11, std.getId());
 
             statement.execute();
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -159,7 +161,7 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -172,7 +174,7 @@ public class StudentModify {
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
             String sql = "delete from student where id = ?";
@@ -182,13 +184,13 @@ public class StudentModify {
 
             statement.execute();
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -196,15 +198,15 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
         // ket thuc.
     }
 
-    public static List<Student> findByInput(String input, String field) {
-        List<Student> studentList = new ArrayList<>();
+    public static List<Shipping> findByInput(String input, String field) {
+        List<Shipping> studentList = new ArrayList<>();
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -229,7 +231,7 @@ public class StudentModify {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Student std = new Student(resultSet.getInt("id"), resultSet.getString("fullname"),
+                Shipping std = new Shipping(resultSet.getInt("id"), resultSet.getString("fullname"),
                         resultSet.getString("gender"), resultSet.getString("position"), resultSet.getString("birthday"),
                         resultSet.getString("hospital"), resultSet.getString("phone_number"),
                         resultSet.getString("working"), resultSet.getString("surgery"), resultSet.getString("night"),
@@ -237,13 +239,13 @@ public class StudentModify {
                 studentList.add(std);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -251,7 +253,7 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -260,8 +262,8 @@ public class StudentModify {
         return studentList;
     }
 
-    public static List<Student> searchBySalary(int salary) {
-        List<Student> studentList = new ArrayList<>();
+    public static List<Shipping> searchBySalary(int salary) {
+        List<Shipping> studentList = new ArrayList<>();
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -278,7 +280,7 @@ public class StudentModify {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Student std = new Student(resultSet.getInt("id"), resultSet.getString("fullname"),
+                Shipping std = new Shipping(resultSet.getInt("id"), resultSet.getString("fullname"),
                         resultSet.getString("gender"), resultSet.getString("position"), resultSet.getString("birthday"),
                         resultSet.getString("hospital"), resultSet.getString("phone_number"),
                         resultSet.getString("working"), resultSet.getString("surgery"), resultSet.getString("night"),
@@ -286,13 +288,13 @@ public class StudentModify {
                 studentList.add(std);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -300,7 +302,7 @@ public class StudentModify {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(StudentModify.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

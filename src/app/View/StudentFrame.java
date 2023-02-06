@@ -1,6 +1,6 @@
 package app.View;
-import app.Model.Abstract.Student;
-import app.Controller.StudentModify;
+import app.Model.Abstract.Shipping;
+import app.Controller.ShippingModify;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -36,7 +36,7 @@ import java.awt.event.MouseAdapter;
 public class StudentFrame extends javax.swing.JFrame {
     DefaultTableModel tableModel;
 
-    List<Student> studentList = new ArrayList<>();
+    List<Shipping> studentList = new ArrayList<>();
 
     /**
      * Creates new form StudentFrame
@@ -50,14 +50,14 @@ public class StudentFrame extends javax.swing.JFrame {
     }
 
     private void showStudent() {
-        studentList = StudentModify.findAll();
+        studentList = ShippingModify.findAll();
 
         tableModel.setRowCount(0);
 
         studentList.forEach((student) -> {
-            tableModel.addRow(new Object[] { tableModel.getRowCount() + 1, student.getFullname(), student.getGender(),
-                    student.getPosition(), student.getBirthday(), student.getHospital(), student.getPhoneNumber(),
-                    student.getWorking(), student.getSurgery(), student.getNight(), student.getSalary() });
+            tableModel.addRow(new Object[] { tableModel.getRowCount() + 1, student.getSenderName(), student.getSenderAddress(),student.getSendingTime(),
+                    student.getReceiverName(), student.getReceiverAddress(), student.getReceivingTime(), 
+                    student.getKm(), student.getKg(), student.getCost() });
         });
     }
 
@@ -91,7 +91,7 @@ public class StudentFrame extends javax.swing.JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 int selectedIndex = tblStudent.getSelectedRow();
-                Student std = studentList.get(selectedIndex);
+                Shipping std = studentList.get(selectedIndex);
                 txtFullname.setText(std.getFullname());
                 cbGender.setSelectedIndex(std.getGender().equals("Male") ? 0 : 1);
                 cbPosition.setSelectedIndex(std.getPosition().equals("Doctor") ? 0 : 1);
@@ -362,10 +362,10 @@ public class StudentFrame extends javax.swing.JFrame {
                 salary += Integer.parseInt(night) * 500000;
         }
 
-        Student std = new Student(fullname, gender, position, birthday, hospital, phoneNumber, working, surgery, night,
+        Shipping std = new Shipping(fullname, gender, position, birthday, hospital, phoneNumber, working, surgery, night,
                 String.valueOf(salary));
 
-        StudentModify.insert(std);
+        ShippingModify.insert(std);
 
         showStudent();
     }
@@ -374,13 +374,13 @@ public class StudentFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedIndex = tblStudent.getSelectedRow();
         if (selectedIndex >= 0) {
-            Student std = studentList.get(selectedIndex);
+            Shipping std = studentList.get(selectedIndex);
 
             int option = JOptionPane.showConfirmDialog(this, "Do you want to delete this item?");
             System.out.println("option : " + option);
 
             if (option == 0) {
-                StudentModify.delete(std.getId());
+                ShippingModify.delete(std.getId());
 
                 showStudent();
             }
@@ -393,7 +393,7 @@ public class StudentFrame extends javax.swing.JFrame {
         System.out.println(selectedIndex);
 
         if (selectedIndex >= 0) {
-            Student stdstd = studentList.get(selectedIndex);
+            Shipping stdstd = studentList.get(selectedIndex);
             String fullname = txtFullname.getText();
             String gender = cbGender.getSelectedItem().toString();
             String position = cbPosition.getSelectedItem().toString();
@@ -409,10 +409,10 @@ public class StudentFrame extends javax.swing.JFrame {
             else
                 salary = Integer.parseInt(working) * 200000 + Integer.parseInt(night) * 500000;
 
-            Student std = new Student(stdstd.getId(), fullname, gender, position, birthday, hospital, phoneNumber,
+            Shipping std = new Shipping(stdstd.getId(), fullname, gender, position, birthday, hospital, phoneNumber,
                     working, surgery, night, String.valueOf(salary));
 
-            StudentModify.update(std);
+            ShippingModify.update(std);
 
             showStudent();
         }
@@ -423,7 +423,7 @@ public class StudentFrame extends javax.swing.JFrame {
         String input = JOptionPane.showInputDialog(this, "Enter full name to search");
         if (input != null && input.length() > 0) {
 
-            studentList = StudentModify.findByInput(input, cbFind.getSelectedItem().toString());
+            studentList = ShippingModify.findByInput(input, cbFind.getSelectedItem().toString());
 
             tableModel.setRowCount(0);
 
@@ -442,7 +442,7 @@ public class StudentFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String input = JOptionPane.showInputDialog(this, "Enter salary to search ");
         if (input != null && input.length() > 0) {
-            studentList = StudentModify.searchBySalary(Integer.parseInt(input));
+            studentList = ShippingModify.searchBySalary(Integer.parseInt(input));
 
             tableModel.setRowCount(0);
 

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package app;
-import app.View.StudentFrame;
+import app.View.Menu_System;
 /**
  *
  * @author Admin
@@ -16,7 +16,7 @@ public class App {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        StudentFrame view = new StudentFrame();
+        Menu_System view = new Menu_System();
     	view.show();
     }
     
