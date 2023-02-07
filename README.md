@@ -1,4 +1,4 @@
-# Hospital Staff Management System
+# Shipping System
 
 ### Technologies
 - **JAVA SWING**: xây dựng giao diện, tham khảo: [docs](https://www.javatpoint.com/java-swing)
@@ -12,7 +12,7 @@
 ### Runs
 * Create name's database in MySql : mydatabase
 * if  user = root, password = nguyen in MySql : (StudentModify.java)
-*       connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+*       connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 * else edit respectively
 *     connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "....", "......"); 
 * Run project: `run App.java`
