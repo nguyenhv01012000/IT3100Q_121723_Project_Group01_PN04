@@ -31,11 +31,11 @@ public class ShippingModify {
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
-            String sqlsql = "CREATE TABLE IF NOT EXISTS shipping ( id int primary key auto_increment,senderName varchar(50) not null, senderAddress varchar(50) not null, sendingTime varchar(50) not null"
-                    + ",receiverName varchar(50) not null, receiverAddress varchar(50) not null, receivingTime varchar(50) not null"
+            String sqlsql = "CREATE TABLE IF NOT EXISTS shipping ( id int primary key auto_increment,senderName varchar(50) not null, senderAddress varchar(50) not null, sendingTime DATE not null"
+                    + ",receiverName varchar(50) not null, receiverAddress varchar(50) not null, receivingTime DATE not null"
                     + ",category varchar(50), km varchar(15),kg varchar(15), cost varchar(15))";
             String sql = "select * from shipping";
             statement = connection.createStatement();
@@ -81,7 +81,7 @@ public class ShippingModify {
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
             String sql = "insert into shipping(senderName, senderAddress, sendingTime, receiverName, receiverAddress, receivingTime, category, km, kg, cost) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -127,13 +127,13 @@ public class ShippingModify {
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
             String sql = "update shipping set senderName=?, senderAddress=?, sendingTime=?, receiverName=?, receiverAddress=?, receivingTime=?, category=?, km=?, kg=?, cost=? where id = ?";
             statement = connection.prepareCall(sql);
 
-            statement.setString(1, std.getSenderAddress());
+            statement.setString(1, std.getSenderName());
             statement.setString(2, std.getSenderAddress());
             statement.setString(3, std.getSendingTime());
             statement.setString(4, std.getReceiverName());
@@ -168,13 +168,51 @@ public class ShippingModify {
         // ket thuc.
     }
 
+    public static void updateCost(Shipping std) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            // lay tat ca danh sach sinh vien
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
+
+            // query
+            String sql = "update shipping set cost=? where id = ?";
+            statement = connection.prepareCall(sql);
+
+            statement.setString(1, std.getCost());
+            statement.setInt(2, std.getId());
+
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        // ket thuc.
+    }
+
     public static void delete(int id) {
         Connection connection = null;
         PreparedStatement statement = null;
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
             String sql = "delete from shipping where id = ?";
@@ -205,62 +243,56 @@ public class ShippingModify {
         // ket thuc.
     }
 
-    // public static List<Shipping> findByInput(String input, String field) {
-    //     List<Shipping> studentList = new ArrayList<>();
+    public static List<Shipping> statisticsByTime(String fromDate, String toDate) {
+        List<Shipping> studentList = new ArrayList<>();
 
-    //     Connection connection = null;
-    //     PreparedStatement statement = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
 
-    //     try {
-    //         // lay tat ca danh sach sinh vien
-    //         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+        try {
+            // lay tat ca danh sach sinh vien
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
-    //         // query
-    //         String sql="";
-    //         if(field.equals("Full Name")) sql = "select * from student where fullname like ?";
-    //         if(field.equals("Gender")) sql = "select * from student where gender like ?";
-    //         if(field.equals("Position")) sql = "select * from student where position like ?";
-    //         if(field.equals("Birthday")) sql = "select * from student where birthday like ?";
-    //         if(field.equals("Hospital")) sql = "select * from student where hospital like ?";
-    //         if(field.equals("Phone Number")) sql = "select * from student where phone_number like ?";
-    //         if(field.equals("Salary")) sql = "select * from student where salary like ?";
+            // query
+            String sql="select * from shipping where sendingTime >= ? and receivingTime <= ?";
+            
+            statement = connection.prepareCall(sql);
+            statement.setString(1, fromDate);
+            statement.setString(2, toDate);
 
-    //         statement = connection.prepareCall(sql);
-    //         statement.setString(1, "%" + input + "%");
+            ResultSet resultSet = statement.executeQuery();
 
-    //         ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Shipping std = new Shipping(resultSet.getInt("id"), 
+                        resultSet.getString("senderName"), resultSet.getString("senderAddress"), resultSet.getString("sendingTime"),
+                        resultSet.getString("receiverName"), resultSet.getString("receiverAddress"), resultSet.getString("receivingTime"),
+                        resultSet.getString("category"), resultSet.getString("km"), resultSet.getString("kg"),
+                        resultSet.getString("cost"));
+                studentList.add(std);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
-    //         while (resultSet.next()) {
-    //             Shipping std = new Shipping(resultSet.getInt("id"), resultSet.getString("fullname"),
-    //                     resultSet.getString("gender"), resultSet.getString("position"), resultSet.getString("birthday"),
-    //                     resultSet.getString("hospital"), resultSet.getString("phone_number"),
-    //                     resultSet.getString("working"), resultSet.getString("surgery"), resultSet.getString("night"),
-    //                     resultSet.getString("salary"));
-    //             studentList.add(std);
-    //         }
-    //     } catch (SQLException ex) {
-    //         Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
-    //     } finally {
-    //         if (statement != null) {
-    //             try {
-    //                 statement.close();
-    //             } catch (SQLException ex) {
-    //                 Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
-    //             }
-    //         }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        // ket thuc.
 
-    //         if (connection != null) {
-    //             try {
-    //                 connection.close();
-    //             } catch (SQLException ex) {
-    //                 Logger.getLogger(ShippingModify.class.getName()).log(Level.SEVERE, null, ex);
-    //             }
-    //         }
-    //     }
-    //     // ket thuc.
-
-    //     return studentList;
-    // }
+        return studentList;
+    }
 
     public static List<Shipping> searchByAddress(String address) {
         List<Shipping> studentList = new ArrayList<>();
@@ -270,7 +302,7 @@ public class ShippingModify {
 
         try {
             // lay tat ca danh sach sinh vien
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "nguyen");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 
             // query
             String sql = "select * from shipping where receiverAddress like ?";

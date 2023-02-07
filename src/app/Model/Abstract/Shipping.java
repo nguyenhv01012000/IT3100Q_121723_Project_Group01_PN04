@@ -7,8 +7,8 @@ package app.Model.Abstract;
 
 public class Shipping {
     int id;
-    String senderName, senderAddress, sendingTime, receiverName, receiverAddress, receivingTime, category;
-    String km, kg, cost;
+    protected String senderName, senderAddress, sendingTime, receiverName, receiverAddress, receivingTime, category;
+    protected String km, kg, cost;
 
     public Shipping(int id, String senderName, String senderAddress, String sendingTime, String receiverName, String receiverAddress, String receivingTime, String category, String km, String kg, String cost) {
         this.id = id;
@@ -124,7 +124,8 @@ public class Shipping {
     public void setCategory(String category) {
         this.category = category;
     }
-
+    
+    public void setCost(String km, String kg){};
 }
 
 

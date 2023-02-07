@@ -8,10 +8,15 @@ import app.Controller.ShippingModify;
 import app.Model.Abstract.Shipping;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.JFrame;
+import java.util.logging.Logger;
 
 //import javafx.scene.control.Alert;
 //import javafx.scene.control.Alert.AlertType;
@@ -43,12 +48,14 @@ public class Menu_System extends javax.swing.JFrame {
         list = ShippingModify.findAll();
 
         tableModel.setRowCount(0);
-
+        int[] revenue = {0};
         list.forEach((student) -> {
             tableModel.addRow(new Object[] { tableModel.getRowCount() + 1, student.getSenderName(), student.getSenderAddress(),student.getSendingTime(),
-                    student.getReceiverName(), student.getReceiverAddress(), student.getReceivingTime(), student.getCategory(),
-                    student.getKm(), student.getKg(), student.getCost() });
+                student.getReceiverName(), student.getReceiverAddress(), student.getReceivingTime(), student.getCategory(),
+                student.getKm(), student.getKg(), student.getCost() });
+            revenue[0] += Integer.parseInt(student.getCost());
         });
+        labelRenevue.setText(String.valueOf(revenue[0]));
     }
 
     /**
@@ -92,9 +99,8 @@ public class Menu_System extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        jDateChooser3 = new com.toedter.calendar.JDateChooser();
+        txtFromDate = new com.toedter.calendar.JDateChooser();
+        txtToDate = new com.toedter.calendar.JDateChooser();
         jPanel4 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -102,12 +108,13 @@ public class Menu_System extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        labelRenevue = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
-        txtDishnum4 = new javax.swing.JTextField();
+        txtExtraKm = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        txtDishnum5 = new javax.swing.JTextField();
+        txtExtraKg = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,6 +195,10 @@ public class Menu_System extends javax.swing.JFrame {
                 btnEditActionPerformed(evt);
             }
         });
+
+        txtSendingTime.setDateFormatString("yyyy-MM-dd");
+
+        txtReceivingTime.setDateFormatString("yyyy-MM-dd");
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel7.setText("Kg");
@@ -322,9 +333,16 @@ public class Menu_System extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -354,13 +372,13 @@ public class Menu_System extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Shipping Statistics", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
 
         jLabel13.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel13.setText("Sending Time");
+        jLabel13.setText("From Date");
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel14.setText("Receiving Time");
+        jLabel14.setText("To Date");
 
         jButton5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jButton5.setText("Count Renevue By Time");
+        jButton5.setText("Statistics By Time");
         jButton5.setActionCommand("Count ReVenue By Time");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -368,13 +386,9 @@ public class Menu_System extends javax.swing.JFrame {
             }
         });
 
-        jButton8.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jButton8.setText("Search Ship By Time");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
+        txtFromDate.setDateFormatString("yyyy-MM-dd");
+
+        txtToDate.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -384,8 +398,7 @@ public class Menu_System extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,8 +409,8 @@ public class Menu_System extends javax.swing.JFrame {
                                 .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                            .addComponent(jDateChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(txtFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                            .addComponent(txtToDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(25, 25, 25))
         );
         jPanel3Layout.setVerticalGroup(
@@ -408,15 +421,13 @@ public class Menu_System extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtFromDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtToDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jButton4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -480,7 +491,7 @@ public class Menu_System extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel5.setText("Money:");
 
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        labelRenevue.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -490,7 +501,7 @@ public class Menu_System extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelRenevue, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(352, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -498,29 +509,37 @@ public class Menu_System extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelRenevue, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Additional Fee", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 14))); // NOI18N
 
         jLabel15.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel15.setText("Document Shipping:");
+        jLabel15.setText("1 Km:");
 
-        txtDishnum4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        txtDishnum4.addActionListener(new java.awt.event.ActionListener() {
+        txtExtraKm.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        txtExtraKm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDishnum4ActionPerformed(evt);
+                txtExtraKmActionPerformed(evt);
             }
         });
 
         jLabel16.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel16.setText("Parcel Shipping:");
+        jLabel16.setText("1 Kg:");
 
-        txtDishnum5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        txtDishnum5.addActionListener(new java.awt.event.ActionListener() {
+        txtExtraKg.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        txtExtraKg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDishnum5ActionPerformed(evt);
+                txtExtraKgActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jButton2.setText("Extra Fee");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -530,16 +549,16 @@ public class Menu_System extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtExtraKm, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtDishnum4, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtDishnum5, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtExtraKg, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -547,12 +566,12 @@ public class Menu_System extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDishnum4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtExtraKm, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDishnum5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtExtraKg, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -571,7 +590,7 @@ public class Menu_System extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
+                        .addGap(36, 36, 36)
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
@@ -608,8 +627,6 @@ public class Menu_System extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.getAccessibleContext().setAccessibleName("Shipping Statistics");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -619,6 +636,25 @@ public class Menu_System extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        
+        if (txtFromDate != null && txtToDate != null) {
+            SimpleDateFormat dcn = new SimpleDateFormat("yyyy-MM-dd");
+            String from = dcn.format(txtFromDate.getDate()).toString();
+            String to = dcn.format(txtToDate.getDate()).toString();
+            list = ShippingModify.statisticsByTime(from, to);
+
+            tableModel.setRowCount(0);
+            int[] revenue = {0};
+            list.forEach((student) -> {
+                tableModel.addRow(new Object[] { tableModel.getRowCount() + 1, student.getSenderName(), student.getSenderAddress(),student.getSendingTime(),
+                    student.getReceiverName(), student.getReceiverAddress(), student.getReceivingTime(), student.getCategory(),
+                    student.getKm(), student.getKg(), student.getCost() });
+                revenue[0] += Integer.parseInt(student.getCost());
+            });
+            labelRenevue.setText(String.valueOf(revenue[0]));
+        } else {
+            showStudent();
+        }
 
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -666,12 +702,14 @@ public class Menu_System extends javax.swing.JFrame {
             list = ShippingModify.searchByAddress(input);
 
             tableModel.setRowCount(0);
-
+            int[] revenue = {0};
             list.forEach((student) -> {
                 tableModel.addRow(new Object[] { tableModel.getRowCount() + 1, student.getSenderName(), student.getSenderAddress(),student.getSendingTime(),
                     student.getReceiverName(), student.getReceiverAddress(), student.getReceivingTime(), student.getCategory(),
                     student.getKm(), student.getKg(), student.getCost() });
+                revenue[0] += Integer.parseInt(student.getCost());
             });
+            labelRenevue.setText(String.valueOf(revenue[0]));
         } else {
             showStudent();
         }
@@ -688,7 +726,7 @@ public class Menu_System extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        SimpleDateFormat dcn = new SimpleDateFormat("MMM d, y");
+        SimpleDateFormat dcn = new SimpleDateFormat("yyyy-MM-dd");
         String senderName = txtSenderName.getText();
         String senderAddress = txtSenderAddress.getText();
         String sendingTime = dcn.format(txtSendingTime.getDate()).toString();
@@ -700,11 +738,10 @@ public class Menu_System extends javax.swing.JFrame {
         String kg = txtKg.getText();
         int cost = 0;
         if (category.equals("Document Shipping")) {
-            
+            cost = 2000*Integer.parseInt(km) + 12000;
         }
-
         else {
-            
+            cost = 2000*Integer.parseInt(km) + Integer.parseInt(kg) * 10000;
         }
 
         Shipping std = new Shipping(senderName, senderAddress, sendingTime, 
@@ -722,7 +759,7 @@ public class Menu_System extends javax.swing.JFrame {
         int selectedIndex = jTable1.getSelectedRow();
         if (selectedIndex >= 0) {
             Shipping stdstd = list.get(selectedIndex);
-            SimpleDateFormat dcn = new SimpleDateFormat("MMM d, y");
+            SimpleDateFormat dcn = new SimpleDateFormat("yyyy-MM-dd");
             String senderName = txtSenderName.getText();
             String senderAddress = txtSenderAddress.getText();
             String sendingTime = dcn.format(txtSendingTime.getDate()).toString();
@@ -734,11 +771,10 @@ public class Menu_System extends javax.swing.JFrame {
             String kg = txtKg.getText();
             int cost = 0;
             if (category.equals("Document Shipping")) {
-
+            cost = 2000*Integer.parseInt(km) + 12000;
             }
-
             else {
-
+                cost = 2000*Integer.parseInt(km) + Integer.parseInt(kg) * 10000;
             }
 
             Shipping std = new Shipping(stdstd.getId(), senderName, senderAddress, sendingTime, 
@@ -752,33 +788,68 @@ public class Menu_System extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
-    private void txtDishnum4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDishnum4ActionPerformed
+    private void txtExtraKmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExtraKmActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDishnum4ActionPerformed
+    }//GEN-LAST:event_txtExtraKmActionPerformed
 
-    private void txtDishnum5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDishnum5ActionPerformed
+    private void txtExtraKgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExtraKgActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDishnum5ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_txtExtraKgActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        //2023-02-01
         int selectedIndex = jTable1.getSelectedRow();
         Shipping std = list.get(selectedIndex);
         txtReceiverName.setText(std.getReceiverName());
         txtReceiverAddress.setText(std.getReceiverAddress());
-        java.util.Date date1 = new SimpleDateFormat("MMM d, y").parse(std.getReceivingTime());
-        txtReceivingTime.setDate(date1);
+        //java.util.Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse("2023-02-01");
+        LocalDate date = LocalDate.parse(std.getReceivingTime());
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        txtReceivingTime.setDate(Date.from(date.atStartOfDay(defaultZoneId).toInstant()));
         txtSenderName.setText(std.getSenderName());
         txtSenderAddress.setText(std.getSenderAddress());
-        java.util.Date date2 = new SimpleDateFormat("MMM d, y").parse(std.getSendingTime());
-        txtSendingTime.setDate(date2);
+        LocalDate date1 = LocalDate.parse(std.getSendingTime());
+        txtSendingTime.setDate(Date.from(date1.atStartOfDay(defaultZoneId).toInstant()));
+        //txtSendingTime.setDate(date2);
         txtCategory.setSelectedIndex(std.getCategory().equals("Document Shipping") ? 0 : 1);
         txtKm.setText(std.getKm());
         txtKg.setText(std.getKg());        // TODO add your handling code here:
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex = jTable1.getSelectedRow();
+        if (selectedIndex >= 0) {
+            Shipping stdstd = list.get(selectedIndex);
+            String category = stdstd.getCategory();
+            String km = stdstd.getKm();
+            String kg = stdstd.getKg();
+            String extraKg = txtExtraKg.getText();
+            String extraKm = txtExtraKm.getText();
+            int cost = 0;
+            if (category.equals("Document Shipping")) {
+            cost = (2000 + Integer.parseInt(extraKm))*Integer.parseInt(km) + 12000;
+            }
+            else {
+                cost = (2000 + Integer.parseInt(extraKm))*Integer.parseInt(km) + Integer.parseInt(kg) * (10000 + Integer.parseInt(extraKg));
+            }
+
+            Shipping std = new Shipping(stdstd.getId(), "", "", "", 
+                "", "", "", 
+                category, km,kg,
+                String.valueOf(cost));
+
+            ShippingModify.updateCost(std);
+
+            showStudent();
+        }else{
+            JOptionPane.showMessageDialog(this,
+                "You have not choose any shipping",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -822,12 +893,10 @@ public class Menu_System extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton8;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-    private com.toedter.calendar.JDateChooser jDateChooser3;
     private org.jdatepicker.util.JDatePickerUtil jDatePickerUtil1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -841,7 +910,6 @@ public class Menu_System extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -853,9 +921,11 @@ public class Menu_System extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel labelRenevue;
     private javax.swing.JComboBox<String> txtCategory;
-    private javax.swing.JTextField txtDishnum4;
-    private javax.swing.JTextField txtDishnum5;
+    private javax.swing.JTextField txtExtraKg;
+    private javax.swing.JTextField txtExtraKm;
+    private com.toedter.calendar.JDateChooser txtFromDate;
     private javax.swing.JTextField txtKg;
     private javax.swing.JTextField txtKm;
     private javax.swing.JTextField txtReceiverAddress;
@@ -864,6 +934,7 @@ public class Menu_System extends javax.swing.JFrame {
     private javax.swing.JTextField txtSenderAddress;
     private javax.swing.JTextField txtSenderName;
     private com.toedter.calendar.JDateChooser txtSendingTime;
+    private com.toedter.calendar.JDateChooser txtToDate;
     // End of variables declaration//GEN-END:variables
 
 }
