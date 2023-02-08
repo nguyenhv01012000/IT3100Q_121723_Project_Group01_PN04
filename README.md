@@ -11,7 +11,7 @@
 ---
 ### Runs
 * Create name's database in MySql : mydatabase
-* if  user = root, password = nguyen in MySql : (StudentModify.java)
+* if  user = root, password = 123456 in MySql : (ShippingModify.java)
 *       connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "123456");
 * else edit respectively
 *     connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "....", "......"); 
